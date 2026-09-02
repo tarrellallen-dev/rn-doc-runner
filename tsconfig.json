@@ -1,0 +1,16 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/contracts" },
+    { "path": "packages/rules" },
+    { "path": "synthetic-ehr" },
+    { "path": "adapters/schema" },
+    { "path": "adapters/synthetic" },
+    { "path": "adapters/devero-disabled" },
+    { "path": "packages/form-engine" },
+    { "path": "packages/queue-engine" },
+    { "path": "extension" },
+    { "path": "native-host" },
+    { "path": "apps/desktop" }
+  ]
+}

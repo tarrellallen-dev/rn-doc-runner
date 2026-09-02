@@ -1,0 +1,65 @@
+node_modules/
+.toolchain/
+dist/
+build/
+out/
+*.log
+.DS_Store
+coverage/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+tests/e2e/.playwright/
+tests/e2e/test-results/
+apps/desktop/release/
+apps/desktop/dist-types/
+native-host/dist/
+native-host/dist-types/
+extension/dist/
+extension/dist-types/
+synthetic-ehr/dist/
+*.pem
+*.p12
+*.mobileprovision
+queue-state.enc
+session-state.enc
+ocr-helper/.build/
+ocr-helper/.swiftpm/
+
+# Phase 2 / Task P2-5: explicit exclusions for anything that could ever
+# carry real patient/worklist data or credentials. RN DOC Runner does not
+# write most of these into the repo during normal operation today (a
+# worklist import is read from its original on-disk location and never
+# copied here; an OCR/PDF preview is rendered to the OS temp directory
+# and deleted immediately after use — see apps/desktop/src/main/
+# ipc-handlers.ts's worklist:previewRow handler) — these patterns exist
+# as defense-in-depth against anything ever landing in the repo by
+# accident or by a future change, not because it happens today.
+worklists/
+worklist-imports/
+*.worklist.json
+ocr-input/
+ocr-output/
+ocr-debug/
+patient-data/
+tmp-patient-data/
+local-queue/
+*.queue-state*.enc
+*.session-state*.enc
+*.session.json
+*.session.enc
+exports/
+*.export.csv
+*.export.json
+screenshots/
+*.screenshot.png
+logs/
+*.har
+storageState.json
+.auth/
+*.cookies
+*credentials*.json
+
+# local scratch (safe to delete)
+_to_delete/

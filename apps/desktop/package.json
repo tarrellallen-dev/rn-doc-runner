@@ -1,0 +1,35 @@
+{
+  "name": "@rn-doc-runner/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/main.cjs",
+  "exports": {
+    "./main/secure-store": "./src/main/secure-store.ts",
+    "./main/queue-state-store": "./src/main/queue-state-store.ts",
+    "./main/resolve-queue-targets": "./src/main/resolve-queue-targets.ts",
+    "./main/native-bridge-server": "./src/main/native-bridge-server.ts",
+    "./main/batch-runner": "./src/main/batch-runner.ts",
+    "./renderer/humanize": "./src/renderer/humanize.ts"
+  },
+  "scripts": {
+    "build": "node --import tsx build.mts",
+    "start": "npm run build && electron ."
+  },
+  "dependencies": {
+    "@rn-doc-runner/adapters-synthetic": "*",
+    "@rn-doc-runner/contracts": "*",
+    "@rn-doc-runner/form-engine": "*",
+    "@rn-doc-runner/queue-engine": "*",
+    "@rn-doc-runner/synthetic-ehr": "*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "electron": "^33.4.11",
+    "esbuild": "*",
+    "playwright": "*"
+  }
+}

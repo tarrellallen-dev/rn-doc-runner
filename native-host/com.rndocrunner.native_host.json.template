@@ -1,0 +1,7 @@
+{
+  "name": "com.rndocrunner.native_host",
+  "description": "RN DOC Runner native messaging host (local relay to the desktop app only; no network access).",
+  "path": "__NATIVE_HOST_WRAPPER_PATH__",
+  "type": "stdio",
+  "allowed_origins": ["chrome-extension://__EXTENSION_ID__/"]
+}

@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "RN DOC Runner (Synthetic Development Mode)",
+  "description": "Local-first, deterministic carry-forward preview and batch assistant for RN-reviewed draft documentation. No cloud AI, no network calls, no analytics. This build's host permission is restricted to the local synthetic EHR only — it cannot reach any live EHR origin.",
+  "version": "0.1.0",
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": ["http://localhost:4173/*"],
+  "background": {
+    "service_worker": "dist/background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "RN DOC Runner"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:4173/*"],
+      "js": ["dist/content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'none'"
+  }
+}

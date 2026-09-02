@@ -1,0 +1,113 @@
+# Build-time enforcement, run on every push and pull request.
+#
+# WHAT THIS JOB COVERS, AND WHY IT IS SCOPED THE WAY IT IS
+#
+# This repository's claim is that its safety properties are enforced by
+# the build rather than by convention, so CI must run the checks that do
+# the enforcing and must be honestly green while doing it. Every step
+# below has been run to completion on Linux against a clean checkout.
+#
+#   lint:types (tsc -b)   - the whole project-reference graph. Note
+#                           `tsc -p tsconfig.json` checks nothing here:
+#                           the root config is `files: []` plus
+#                           references, so `-b` is the only correct form.
+#   build:production      - required before the security scan, which
+#                           inspects BUILT bundles and now fails closed
+#                           when they are missing.
+#   test:unit             - pure logic, no browser, no subprocess.
+#   test:security         - the scanner's own detection logic against a
+#                           poisoned fixture AND against the real build.
+#   security:scan         - the gate itself, as a standalone exit code.
+#
+# WHAT THIS JOB DELIBERATELY DOES NOT COVER
+#
+#   tests/integration/    - Playwright-driven Chromium against the local
+#                           synthetic EHR. Runnable on Linux in principle
+#                           (`npx playwright install --with-deps chromium`),
+#                           but it has only ever been verified on macOS,
+#                           and two of its files
+#                           (`ocr-e2e`, `pdf-heic-import`) depend on the
+#                           Swift/Apple Vision OCR helper, which cannot
+#                           build off macOS and would self-skip - i.e. a
+#                           green Linux run would silently be a partial
+#                           one. Rather than ship a job that is either
+#                           red or quietly hollow, it is left out and
+#                           named here.
+#   tests/e2e/            - same reason, plus `acceptance.test.ts`
+#                           requires the OCR helper binary outright and
+#                           `extension.test.ts` drives a real Chromium
+#                           profile.
+#   ocr-helper/           - Swift + Apple Vision, macOS-only. No Linux
+#                           runner can build or run it.
+#
+# `npm test` is unit + integration only, so it is NOT the right CI entry
+# point: it would skip the security layer entirely while pulling in the
+# browser-dependent layer. The steps below are what `npm run test:ci`
+# runs locally.
+#
+# Adding macOS coverage is a real gap, not an oversight: a
+# `macos-latest` job could run `swift build -c release` in `ocr-helper/`,
+# `npx playwright install chromium`, and `npm run test:all` with no
+# skips (that combination is the Mac validation pass described in
+# docs/BUILD_REPORT.md). It is not added here because it has not been
+# run on a GitHub-hosted macOS runner, and an unverified job in a
+# repository about build-time enforcement would be exactly the wrong
+# thing to add.
+
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: types, build, unit + security
+    runs-on: ubuntu-latest
+    env:
+      # Nothing in this job launches Electron; skipping the ~100 MB
+      # binary download removes a slow, network-flaky install step
+      # without weakening any check. The desktop bundle is still built
+      # (esbuild) and still scanned.
+      ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check the whole project graph
+        run: npm run lint:types
+
+      - name: Build extension and desktop bundles
+        run: npm run build:production
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Security scan tests
+        run: npm run test:security
+
+      - name: Security scan (build gate)
+        run: npm run security:scan
+
+      - name: Fail if the build wrote anything into tracked files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "The build modified tracked files or produced untracked output that is not gitignored:"
+            git status --porcelain
+            exit 1
+          fi

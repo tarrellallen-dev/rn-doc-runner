@@ -1,0 +1,27 @@
+{
+  "_comment": "NOT an active manifest. Template only, copied to manifest.json by scripts/build-production-extension.ts, and only after every item in docs/DEPLOYMENT_CHECKLIST.md and RN DOC OS 12_LOCAL_OPERATOR/DEPLOYMENT_GATE.md has been completed and signed off. Even once built this way, the bundled adapter (adapters/devero-disabled) still ships enabled:false / status:UNCONFIGURED and must be replaced with a real, RN-approved, versioned adapter before Production Draft Mode can activate.",
+  "manifest_version": 3,
+  "name": "RN DOC Runner",
+  "description": "Local-first, deterministic carry-forward preview and batch assistant for RN-reviewed draft documentation. No cloud AI, no network calls, no analytics.",
+  "version": "0.1.0",
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": ["__EXACT_EHR_ORIGIN__/*"],
+  "background": {
+    "service_worker": "dist/background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "RN DOC Runner"
+  },
+  "content_scripts": [
+    {
+      "matches": ["__EXACT_EHR_ORIGIN__/*"],
+      "js": ["dist/content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'none'"
+  }
+}

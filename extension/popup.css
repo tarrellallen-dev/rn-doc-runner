@@ -1,0 +1,9 @@
+body { font-family: -apple-system, sans-serif; width: 320px; padding: 14px; color: #173d35; }
+h1 { font-size: 16px; margin: 0 0 6px; }
+.hint { font-size: 12px; color: #6b6b6b; margin: 0 0 12px; }
+.actions { display: flex; flex-direction: column; gap: 8px; }
+button { padding: 8px 10px; border-radius: 6px; border: 1px solid #173d35; background: #fff; color: #173d35; cursor: pointer; font-size: 13px; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.secondary { border-color: #999; color: #333; }
+button.danger { border-color: #9f1239; color: #9f1239; font-weight: 600; }
+#status { font-size: 12px; margin-top: 12px; white-space: pre-wrap; }

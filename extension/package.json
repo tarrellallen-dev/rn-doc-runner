@@ -1,0 +1,18 @@
+{
+  "name": "@rn-doc-runner/extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node --import tsx build.mts"
+  },
+  "dependencies": {
+    "@rn-doc-runner/contracts": "*",
+    "@rn-doc-runner/form-engine": "*",
+    "@rn-doc-runner/rules": "*"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "esbuild": "*"
+  }
+}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>RN DOC Runner</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>RN DOC Runner</h1>
+    <p class="hint">Manual preview mode. Capture the source tab, then compare/apply on the destination tab.</p>
+    <div class="actions">
+      <button id="capture">1. Capture source tab</button>
+      <button id="compare">2. Compare destination tab</button>
+      <button id="apply" disabled>3. Apply reviewed changes</button>
+      <button id="clear" class="secondary">Clear session</button>
+      <button id="emergency-stop" class="danger">Emergency Stop</button>
+    </div>
+    <p id="status"></p>
+    <script src="dist/popup.js"></script>
+  </body>
+</html>

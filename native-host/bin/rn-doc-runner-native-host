@@ -1,0 +1,6 @@
+#!/bin/bash
+# Chrome launches this directly (per the installed native messaging host
+# manifest's "path"). It must be an executable, not a bare .ts/.js file.
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_ROOT="$(cd "$DIR/.." && pwd)"
+exec "$PROJECT_ROOT/.toolchain/node/bin/node" --import tsx "$DIR/src/main.ts"
