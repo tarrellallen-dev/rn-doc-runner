@@ -11,6 +11,26 @@ It calls no AI model. Every click it performs is refused unless the control's vi
 accessible name both match what the caller declared and neither reads as a finalization action. CI
 fails the build if a shipped bundle reaches any destination other than loopback.
 
+## What it looks like
+
+![Transfer plan](docs/screenshots/transfer-plan.png)
+
+<sub>The decision table, before anything is written. Every field is classified and given an explicit
+action and reason. The five prohibited fields — pulse, pain score, wound length, narrative, comments,
+findings, vitals — are all `skip / classification-prohibited`, and a field the destination already has
+is `skip / destination-already-populated` rather than overwritten.</sub>
+
+![Synthetic EHR form](docs/screenshots/synthetic-ehr-form.png)
+
+<sub>The bundled synthetic EHR that ships with the repo. Prohibited fields are shaded and labelled, and
+the finalization controls (Sign, Submit, Send to Office, Finalize) exist specifically so the tests can
+prove nothing ever clicks them.</sub>
+
+![Transfer complete](docs/screenshots/transfer-complete.png)
+
+<sub>Completed: 3 of 12 fields transferred, 9 left alone, 0 blocked, 0 conflicts. Emergency Stop is
+available throughout. The draft is saved; signing and submission remain with the RN.</sub>
+
 ## Status and scope
 
 I built this as a reference implementation, and I am publishing it as one.
