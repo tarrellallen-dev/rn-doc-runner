@@ -52,6 +52,39 @@ A few things worth stating plainly:
 - Devero is a trademark of its owner. This project is not affiliated with or endorsed by them.
 - Apache-2.0, without warranty of any kind. See [LICENSE](LICENSE).
 
+## Running it yourself, and making it your own
+
+Everything needed to run the full system is in this repo. There is no EHR to sign up for, no data
+to supply, and no account to create. `npm run setup` builds it and runs the security scan;
+`npm run synthetic-ehr:start` brings up a local Express app on port 4173 that stands in for the EHR,
+serving forms populated from `synthetic-ehr/src/fixtures.ts`. Point the desktop app at it and you
+have the whole pipeline — capture, compare, plan, apply, verify, save — running end to end against
+records that never existed.
+
+That makes this a sandbox you can take apart. The pieces are separated so you can replace one
+without touching the others:
+
+| Want to change | Edit |
+|---|---|
+| The UI | `apps/desktop/src/renderer/` — plain React and TSX, no component framework to fight |
+| The fake EHR's forms, patients and layout | `synthetic-ehr/src/fixtures.ts` and `render.ts` |
+| Which fields may be carried, per form version | `adapters/synthetic/src/*.ts` — an allowlist of labels and values |
+| A different form or a different system | Write a new adapter against the `SiteAdapter` contract in `packages/contracts/` |
+| The rules themselves | `packages/rules/src/rules.ts` — pure functions, no I/O, fully unit-tested |
+
+The domain here is nursing documentation, but nothing in the architecture is nursing-specific. The
+shape of the problem — carry approved fields from a prior record into a new one, refuse anything
+outside the allowlist, fail closed on ambiguity, never touch the control that finalizes — is the
+same for insurance forms, compliance filings, intake paperwork, or any workflow where the cost of a
+wrong write is high and a human has to stay accountable for the result. Swap the adapters and the
+fixtures and the engine does not care.
+
+Two things to keep in mind if you fork it. The `SiteAdapter` allowlist is the safety boundary, so a
+field you add there is a field the system will write — that is the one file worth reviewing
+carefully. And running against anything real is a different question from running the sandbox: see
+[docs/DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md), which exists precisely because the
+answer is not "just point it at your system."
+
 ## Safety model
 
 Every mutation passes through exact-match identity verification on patient, MR, form, page, author,

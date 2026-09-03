@@ -52,7 +52,13 @@ local-queue/
 exports/
 *.export.csv
 *.export.json
+# Screenshots stay excluded by default: a capture of a real EHR page is a PHI
+# leak, and the point of this rule is that one can never be committed by
+# accident. docs/screenshots/ is the single exception - curated documentation
+# images from the synthetic environment, reviewed before they go in.
 screenshots/
+!docs/screenshots/
+!docs/screenshots/**
 *.screenshot.png
 logs/
 *.har
